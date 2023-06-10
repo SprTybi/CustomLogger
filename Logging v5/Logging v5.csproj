@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <Compile Remove="Logger\Repositories\DatabaseLog.cs" />
+    <Compile Remove="Logger\Repositories\DatabaseLogWithAdo.cs" />
   </ItemGroup>
 
   <ItemGroup>

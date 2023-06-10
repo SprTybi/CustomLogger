@@ -21,30 +21,15 @@ namespace Logging_v5.Middleware
         public async Task Invoke(HttpContext context, [FromServices]ILogType logger)
         {
             logger.Log(context.Request);
-            
-            //var originalBodyStream = context.Response.Body;
-            //using var responseBody = new MemoryStream();
-            //context.Response.Body = responseBody;
-            
+
+            var originalBodyStream = context.Response.Body;
+            using var responseBody = new MemoryStream();
+            context.Response.Body = responseBody;
+
             await _next(context);
 
-            //var body = string.Empty;
-
-            //context.Response.Body.Seek(0, SeekOrigin.Begin);
-            //using var reader = new StreamReader(context.Response.Body, Encoding.UTF8, true, 1024, true);
-            //body = await reader.ReadToEndAsync();
-
-            //context.Response.Body.Seek(0, SeekOrigin.Begin);
-
-            //var log = new StringBuilder();
-            //log.AppendLine($"Response: {body}");
-            //log.AppendLine($"StatusCode: {context.Response.StatusCode}");
-            //log.AppendLine($"Headers: {context.Response.Headers}");
-
             logger.Log(context.Response);
-
-
-            //await responseBody.CopyToAsync(originalBodyStream);
+            await responseBody.CopyToAsync(originalBodyStream);
         }
     }
 

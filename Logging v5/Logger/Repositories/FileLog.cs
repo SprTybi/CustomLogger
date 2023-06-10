@@ -12,23 +12,29 @@ namespace Logging_v5.Logger.Repositories
         private static readonly string _logFilePath = "logs/myapp.txt";
         public void Log(HttpContext context)
         {
-            lock (_lockObject)
-            {
-                using (StreamWriter streamWriter = File.AppendText(_logFilePath))
-                {
-                    streamWriter.WriteLine($"{DateTime.Now}: {"sd"}");
-                }
-            }
+            @LogType
+            @Time
+            @Type
+            @UserAgent
+            @StatusCode
+            @Message
         }
 
         public void Log(HttpRequest context)
         {
-            throw new NotImplementedException();
+            using (StreamWriter streamWriter = File.AppendText(_logFilePath))
+            {
+                var Type = context.Body.CanRead ? "Request" : "Response";
+                streamWriter.WriteLine($" LogType:info   | Time:{DateTime.Now}   | Type:{Type}   | User-Agent:{context.Headers["User-Agent"]}   | StatusCode:200   | Message:{context.Path}");
+            }
         }
 
         public void Log( HttpResponse context)
         {
-            throw new NotImplementedException();
+            using (StreamWriter streamWriter = File.AppendText(_logFilePath))
+            {
+                streamWriter.WriteLine($"{DateTime.Now}: {"sd"}");
+            }
         }
     }
 }
